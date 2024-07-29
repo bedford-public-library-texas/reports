@@ -1,84 +1,84 @@
 SELECT to_char(c.timestamp, 'yyyy-mm') AS 'Month', 'Library' AS 'Entity',
 d.debit_type_code AS 'Fund', CONCAT('<p style="text-align:right!important; margin-top:0px!important;">',FORMAT(abs(sum(o.amount)),2),'</p>') AS 'Total amount'
 FROM account_offsets o
-	LEFT JOIN accountlines d ON (o.debit_id = d.accountlines_id and d.debit_type_code is not null)
+    LEFT JOIN accountlines d ON (o.debit_id = d.accountlines_id and d.debit_type_code is not null)
     LEFT JOIN accountlines c ON (o.credit_id = c.accountlines_id and c.credit_type_code is not null)
-	LEFT JOIN cash_registers ON (c.register_id = cash_registers.id)
+    LEFT JOIN cash_registers ON (c.register_id = cash_registers.id)
 WHERE c.date BETWEEN CAST(CONCAT(<<Collected between|date>>, ' ', '09:00:00') AS DATETIME) AND CAST(CONCAT(<<and|date>>, ' ', '08:59:59') AS DATETIME)
-AND d.debit_type_code LIKE 'LI30%' 
-AND c.credit_type_code != 'WRITEOFF' 
-AND d.status IS NULL
+    AND d.debit_type_code LIKE 'LI30%' 
+    AND c.credit_type_code != 'WRITEOFF' 
+    AND d.status IS NULL
 OR c.date BETWEEN CAST(CONCAT(<<Collected between|date>>, ' ', '09:00:00') AS DATETIME) AND CAST(CONCAT(<<and|date>>, ' ', '08:59:59') AS DATETIME)
-AND d.debit_type_code LIKE 'Printing/Copier Fees'
-AND c.credit_type_code != 'WRITEOFF' 
-AND d.status IS NULL
+    AND d.debit_type_code LIKE 'Printing/Copier Fees'
+    AND c.credit_type_code != 'WRITEOFF' 
+    AND d.status IS NULL
 OR c.date BETWEEN CAST(CONCAT(<<Collected between|date>>, ' ', '09:00:00') AS DATETIME) AND CAST(CONCAT(<<and|date>>, ' ', '08:59:59') AS DATETIME)
-AND d.debit_type_code LIKE 'C'
-AND c.credit_type_code != 'WRITEOFF' 
-AND d.status IS NULL
+    AND d.debit_type_code LIKE 'C'
+    AND c.credit_type_code != 'WRITEOFF' 
+    AND d.status IS NULL
 OR c.date BETWEEN CAST(CONCAT(<<Collected between|date>>, ' ', '09:00:00') AS DATETIME) AND CAST(CONCAT(<<and|date>>, ' ', '08:59:59') AS DATETIME)
-AND d.debit_type_code LIKE 'LI31%'
-AND c.credit_type_code != 'WRITEOFF' 
-AND d.status IS NULL
+    AND d.debit_type_code LIKE 'LI31%'
+    AND c.credit_type_code != 'WRITEOFF' 
+    AND d.status IS NULL
 OR c.date BETWEEN CAST(CONCAT(<<Collected between|date>>, ' ', '09:00:00') AS DATETIME) AND CAST(CONCAT(<<and|date>>, ' ', '08:59:59') AS DATETIME)
-AND d.debit_type_code LIKE 'LI32%'
-AND c.credit_type_code != 'WRITEOFF' 
-AND d.status IS NULL
+    AND d.debit_type_code LIKE 'LI32%'
+    AND c.credit_type_code != 'WRITEOFF' 
+    AND d.status IS NULL
 OR c.date BETWEEN CAST(CONCAT(<<Collected between|date>>, ' ', '09:00:00') AS DATETIME) AND CAST(CONCAT(<<and|date>>, ' ', '08:59:59') AS DATETIME)
-AND d.debit_type_code LIKE 'LI405%'
-AND c.credit_type_code != 'WRITEOFF' 
-AND d.status IS NULL
+    AND d.debit_type_code LIKE 'LI405%'
+    AND c.credit_type_code != 'WRITEOFF' 
+    AND d.status IS NULL
 OR c.date BETWEEN CAST(CONCAT(<<Collected between|date>>, ' ', '09:00:00') AS DATETIME) AND CAST(CONCAT(<<and|date>>, ' ', '08:59:59') AS DATETIME)
-AND d.debit_type_code LIKE 'Cleaning Fee'
-AND c.credit_type_code != 'WRITEOFF' 
-AND d.status IS NULL
+    AND d.debit_type_code LIKE 'Cleaning Fee'
+    AND c.credit_type_code != 'WRITEOFF' 
+    AND d.status IS NULL
 OR c.date BETWEEN CAST(CONCAT(<<Collected between|date>>, ' ', '09:00:00') AS DATETIME) AND CAST(CONCAT(<<and|date>>, ' ', '08:59:59') AS DATETIME)
-AND d.debit_type_code LIKE 'LI409%'
-AND c.credit_type_code != 'WRITEOFF' 
-AND d.status IS NULL
+    AND d.debit_type_code LIKE 'LI409%'
+    AND c.credit_type_code != 'WRITEOFF' 
+    AND d.status IS NULL
 OR c.date BETWEEN CAST(CONCAT(<<Collected between|date>>, ' ', '09:00:00') AS DATETIME) AND CAST(CONCAT(<<and|date>>, ' ', '08:59:59') AS DATETIME)
-AND d.debit_type_code LIKE 'Fax Fees'
-AND c.credit_type_code != 'WRITEOFF' 
-AND d.status IS NULL
+    AND d.debit_type_code LIKE 'Fax Fees'
+    AND c.credit_type_code != 'WRITEOFF' 
+    AND d.status IS NULL
 OR c.date BETWEEN CAST(CONCAT(<<Collected between|date>>, ' ', '09:00:00') AS DATETIME) AND CAST(CONCAT(<<and|date>>, ' ', '08:59:59') AS DATETIME)
-AND d.debit_type_code LIKE 'LI41%'
-AND c.credit_type_code != 'WRITEOFF' 
-AND d.status IS NULL
+    AND d.debit_type_code LIKE 'LI41%'
+    AND c.credit_type_code != 'WRITEOFF' 
+    AND d.status IS NULL
 OR c.date BETWEEN CAST(CONCAT(<<Collected between|date>>, ' ', '09:00:00') AS DATETIME) AND CAST(CONCAT(<<and|date>>, ' ', '08:59:59') AS DATETIME)
-AND d.debit_type_code LIKE 'Replacement Case'
-AND c.credit_type_code != 'WRITEOFF' 
-AND d.status IS NULL
+    AND d.debit_type_code LIKE 'Replacement Case'
+    AND c.credit_type_code != 'WRITEOFF' 
+    AND d.status IS NULL
 OR c.date BETWEEN CAST(CONCAT(<<Collected between|date>>, ' ', '09:00:00') AS DATETIME) AND CAST(CONCAT(<<and|date>>, ' ', '08:59:59') AS DATETIME)
-AND d.debit_type_code LIKE 'Reprogramming Fee'
-AND c.credit_type_code != 'WRITEOFF' 
-AND d.status IS NULL
+    AND d.debit_type_code LIKE 'Reprogramming Fee'
+    AND c.credit_type_code != 'WRITEOFF' 
+    AND d.status IS NULL
 OR c.date BETWEEN CAST(CONCAT(<<Collected between|date>>, ' ', '09:00:00') AS DATETIME) AND CAST(CONCAT(<<and|date>>, ' ', '08:59:59') AS DATETIME)
-AND d.debit_type_code LIKE 'OVERDUE'
-AND c.credit_type_code != 'WRITEOFF' 
-AND d.status IS NULL
+    AND d.debit_type_code LIKE 'OVERDUE'
+    AND c.credit_type_code != 'WRITEOFF' 
+    AND d.status IS NULL
 OR c.date BETWEEN CAST(CONCAT(<<Collected between|date>>, ' ', '09:00:00') AS DATETIME) AND CAST(CONCAT(<<and|date>>, ' ', '08:59:59') AS DATETIME)
-AND d.debit_type_code LIKE 'LI72%'
-AND c.credit_type_code != 'WRITEOFF' 
-AND d.status IS NULL
+    AND d.debit_type_code LIKE 'LI72%'
+    AND c.credit_type_code != 'WRITEOFF' 
+    AND d.status IS NULL
 OR c.date BETWEEN CAST(CONCAT(<<Collected between|date>>, ' ', '09:00:00') AS DATETIME) AND CAST(CONCAT(<<and|date>>, ' ', '08:59:59') AS DATETIME)
-AND d.debit_type_code LIKE 'ILL Postage'
-AND c.credit_type_code != 'WRITEOFF' 
-AND d.status IS NULL
+    AND d.debit_type_code LIKE 'ILL Postage'
+    AND c.credit_type_code != 'WRITEOFF' 
+    AND d.status IS NULL
 OR c.date BETWEEN CAST(CONCAT(<<Collected between|date>>, ' ', '09:00:00') AS DATETIME) AND CAST(CONCAT(<<and|date>>, ' ', '08:59:59') AS DATETIME)
-AND d.debit_type_code LIKE 'LI73%'
-AND c.credit_type_code != 'WRITEOFF' 
-AND d.status IS NULL
+    AND d.debit_type_code LIKE 'LI73%'
+    AND c.credit_type_code != 'WRITEOFF' 
+    AND d.status IS NULL
 OR c.date BETWEEN CAST(CONCAT(<<Collected between|date>>, ' ', '09:00:00') AS DATETIME) AND CAST(CONCAT(<<and|date>>, ' ', '08:59:59') AS DATETIME)
-AND d.debit_type_code = 'LOST'
-AND c.credit_type_code != 'WRITEOFF' 
-AND d.status IS NULL
-AND c.credit_type_code = 'PAYMENT'
-AND c.credit_type_code != 'WRITEOFF' 
-AND 'Total amount' != '0.00'
+    AND d.debit_type_code = 'LOST'
+    AND c.credit_type_code != 'WRITEOFF' 
+    AND d.status IS NULL
+    AND c.credit_type_code = 'PAYMENT'
+    AND c.credit_type_code != 'WRITEOFF' 
+    AND 'Total amount' != '0.00'
 OR c.date BETWEEN CAST(CONCAT(<<Collected between|date>>, ' ', '09:00:00') AS DATETIME) AND CAST(CONCAT(<<and|date>>, ' ', '08:59:59') AS DATETIME)
-AND d.debit_type_code LIKE 'OVERDUE' 
-AND c.credit_type_code != 'WRITEOFF'
-AND 'Total amount' != '0.00'
+    AND d.debit_type_code LIKE 'OVERDUE' 
+    AND c.credit_type_code != 'WRITEOFF'
+    AND 'Total amount' != '0.00'
 GROUP BY d.debit_type_code asc
 
 UNION ALL
@@ -91,48 +91,48 @@ FROM account_offsets o
     LEFT JOIN accountlines d ON (o.debit_id = d.accountlines_id and d.debit_type_code is not null)
     LEFT JOIN accountlines c ON (o.credit_id = c.accountlines_id and c.credit_type_code is not null)
 WHERE c.date BETWEEN CAST(CONCAT(<<Collected between|date>>, ' ', '09:00:00') AS DATETIME) AND CAST(CONCAT(<<and|date>>, ' ', '08:59:59') AS DATETIME)
-AND d.debit_type_code LIKE 'LI30%'
-AND c.credit_type_code != 'WRITEOFF' 
-AND d.status IS NULL
+    AND d.debit_type_code LIKE 'LI30%'
+    AND c.credit_type_code != 'WRITEOFF' 
+    AND d.status IS NULL
 OR c.date BETWEEN CAST(CONCAT(<<Collected between|date>>, ' ', '09:00:00') AS DATETIME) AND CAST(CONCAT(<<and|date>>, ' ', '08:59:59') AS DATETIME)
-AND d.debit_type_code LIKE 'LI31%'
-AND c.credit_type_code != 'WRITEOFF'
-AND d.status IS NULL
+    AND d.debit_type_code LIKE 'LI31%'
+    AND c.credit_type_code != 'WRITEOFF'
+    AND d.status IS NULL
 OR c.date BETWEEN CAST(CONCAT(<<Collected between|date>>, ' ', '09:00:00') AS DATETIME) AND CAST(CONCAT(<<and|date>>, ' ', '08:59:59') AS DATETIME)
-AND d.debit_type_code LIKE 'LI32%'
-AND c.credit_type_code != 'WRITEOFF' 
-AND d.status IS NULL
+    AND d.debit_type_code LIKE 'LI32%'
+    AND c.credit_type_code != 'WRITEOFF' 
+    AND d.status IS NULL
 OR c.date BETWEEN CAST(CONCAT(<<Collected between|date>>, ' ', '09:00:00') AS DATETIME) AND CAST(CONCAT(<<and|date>>, ' ', '08:59:59') AS DATETIME)
-AND d.debit_type_code LIKE 'LI405%'
-AND c.credit_type_code != 'WRITEOFF' 
-AND d.status IS NULL
+    AND d.debit_type_code LIKE 'LI405%'
+    AND c.credit_type_code != 'WRITEOFF' 
+    AND d.status IS NULL
 OR c.date BETWEEN CAST(CONCAT(<<Collected between|date>>, ' ', '09:00:00') AS DATETIME) AND CAST(CONCAT(<<and|date>>, ' ', '08:59:59') AS DATETIME)
-AND d.debit_type_code LIKE 'LI409%'
-AND c.credit_type_code != 'WRITEOFF' 
-AND d.status IS NULL
+    AND d.debit_type_code LIKE 'LI409%'
+    AND c.credit_type_code != 'WRITEOFF' 
+    AND d.status IS NULL
 OR c.date BETWEEN CAST(CONCAT(<<Collected between|date>>, ' ', '09:00:00') AS DATETIME) AND CAST(CONCAT(<<and|date>>, ' ', '08:59:59') AS DATETIME)
-AND d.debit_type_code LIKE 'LI41%'
-AND c.credit_type_code != 'WRITEOFF' 
-AND d.status IS NULL
+    AND d.debit_type_code LIKE 'LI41%'
+    AND c.credit_type_code != 'WRITEOFF' 
+    AND d.status IS NULL
 OR c.date BETWEEN CAST(CONCAT(<<Collected between|date>>, ' ', '09:00:00') AS DATETIME) AND CAST(CONCAT(<<and|date>>, ' ', '08:59:59') AS DATETIME)
-AND d.debit_type_code LIKE 'LI72%'
-AND c.credit_type_code != 'WRITEOFF' 
-AND d.status IS NULL
+    AND d.debit_type_code LIKE 'LI72%'
+    AND c.credit_type_code != 'WRITEOFF' 
+    AND d.status IS NULL
 OR c.date BETWEEN CAST(CONCAT(<<Collected between|date>>, ' ', '09:00:00') AS DATETIME) AND CAST(CONCAT(<<and|date>>, ' ', '08:59:59') AS DATETIME)
-AND d.debit_type_code LIKE 'LI73%'
-AND c.credit_type_code != 'WRITEOFF' 
-AND d.status IS NULL
+    AND d.debit_type_code LIKE 'LI73%'
+    AND c.credit_type_code != 'WRITEOFF' 
+    AND d.status IS NULL
 OR c.date BETWEEN CAST(CONCAT(<<Collected between|date>>, ' ', '09:00:00') AS DATETIME) AND CAST(CONCAT(<<and|date>>, ' ', '08:59:59') AS DATETIME)
-AND d.debit_type_code = 'LOST'
-AND c.credit_type_code != 'WRITEOFF' 
-AND d.status IS NULL
-AND c.credit_type_code = 'PAYMENT'
-AND c.credit_type_code != 'WRITEOFF' 
-AND o.type = 'APPLY'
+    AND d.debit_type_code = 'LOST'
+    AND c.credit_type_code != 'WRITEOFF' 
+    AND d.status IS NULL
+    AND c.credit_type_code = 'PAYMENT'
+    AND c.credit_type_code != 'WRITEOFF' 
+    AND o.type = 'APPLY'
 OR c.date BETWEEN CAST(CONCAT(<<Collected between|date>>, ' ', '09:00:00') AS DATETIME) AND CAST(CONCAT(<<and|date>>, ' ', '08:59:59') AS DATETIME)
-AND d.debit_type_code LIKE 'OVERDUE'
-AND c.credit_type_code != 'WRITEOFF'
-AND 'Total amount' != '0.00'
+    AND d.debit_type_code LIKE 'OVERDUE'
+    AND c.credit_type_code != 'WRITEOFF'
+    AND 'Total amount' != '0.00'
 
 UNION ALL
 
@@ -143,11 +143,11 @@ FROM account_offsets o
 	LEFT JOIN accountlines c ON (o.credit_id = c.accountlines_id and c.credit_type_code is not null)
 	LEFT JOIN cash_registers ON (c.register_id = cash_registers.id)
 WHERE c.date BETWEEN CAST(CONCAT(<<Collected between|date>>, ' ', '09:00:00') AS DATETIME) AND CAST(CONCAT(<<and|date>>, ' ', '08:59:59') AS DATETIME)
-AND d.debit_type_code LIKE 'LI70%'
-AND d.status IS NULL
+    AND d.debit_type_code LIKE 'LI70%'
+    AND d.status IS NULL
 OR c.date BETWEEN CAST(CONCAT(<<Collected between|date>>, ' ', '09:00:00') AS DATETIME) AND CAST(CONCAT(<<and|date>>, ' ', '08:59:59') AS DATETIME)
-AND d.debit_type_code LIKE 'LI71%'
-AND d.status IS NULL
+    AND d.debit_type_code LIKE 'LI71%'
+    AND d.status IS NULL
 GROUP BY d.debit_type_code asc
 
 UNION ALL
@@ -160,11 +160,11 @@ FROM account_offsets o
     LEFT JOIN accountlines d ON (o.debit_id = d.accountlines_id and d.debit_type_code is not null)
     LEFT JOIN accountlines c ON (o.credit_id = c.accountlines_id and c.credit_type_code is not null)
 WHERE c.date BETWEEN CAST(CONCAT(<<Collected between|date>>, ' ', '09:00:00') AS DATETIME) AND CAST(CONCAT(<<and|date>>, ' ', '08:59:59') AS DATETIME)
-AND d.debit_type_code LIKE 'LI70%'
-AND d.status IS NULL  
+    AND d.debit_type_code LIKE 'LI70%'
+    AND d.status IS NULL  
 OR c.date BETWEEN CAST(CONCAT(<<Collected between|date>>, ' ', '09:00:00') AS DATETIME) AND CAST(CONCAT(<<and|date>>, ' ', '08:59:59') AS DATETIME)
-AND d.debit_type_code LIKE 'LI71%'
-AND d.status IS NULL
+    AND d.debit_type_code LIKE 'LI71%'
+    AND d.status IS NULL
 
 UNION ALL
 
@@ -172,12 +172,12 @@ SELECT to_char(c.timestamp, 'yyyy-mm') AS 'Month', 'Foundation' AS 'Entity',
 d.debit_type_code AS 'FOUNDATION', 
 CONCAT('<p style="text-align:right!important; margin-top:0px!important;">',FORMAT(abs(sum(o.amount)),2),'</p>') AS 'Total amount'
 FROM account_offsets o
-	LEFT JOIN accountlines d ON (o.debit_id = d.accountlines_id and d.debit_type_code is not null)
+    LEFT JOIN accountlines d ON (o.debit_id = d.accountlines_id and d.debit_type_code is not null)
     LEFT JOIN accountlines c ON (o.credit_id = c.accountlines_id and c.credit_type_code is not null)
-	LEFT JOIN cash_registers ON (c.register_id = cash_registers.id)
+    LEFT JOIN cash_registers ON (c.register_id = cash_registers.id)
 WHERE c.date BETWEEN CAST(CONCAT(<<Collected between|date>>, ' ', '09:00:00') AS DATETIME) AND CAST(CONCAT(<<and|date>>, ' ', '08:59:59') AS DATETIME)
-AND d.debit_type_code LIKE 'LI74%'
-AND d.status IS NULL 
+    AND d.debit_type_code LIKE 'LI74%'
+    AND d.status IS NULL 
 GROUP BY d.debit_type_code asc
 
 UNION ALL
@@ -190,8 +190,8 @@ FROM account_offsets o
     LEFT JOIN accountlines d ON (o.debit_id = d.accountlines_id and d.debit_type_code is not null)
     LEFT JOIN accountlines c ON (o.credit_id = c.accountlines_id and c.credit_type_code is not null)
 WHERE c.date BETWEEN CAST(CONCAT(<<Collected between|date>>, ' ', '09:00:00') AS DATETIME) AND CAST(CONCAT(<<and|date>>, ' ', '08:59:59') AS DATETIME)
-AND d.debit_type_code LIKE 'LI74%'
-AND d.status IS NULL
+    AND d.debit_type_code LIKE 'LI74%'
+    AND d.status IS NULL
 
 UNION ALL
 
@@ -202,13 +202,13 @@ UNION ALL
 SELECT to_char(c.timestamp, 'yyyy-mm') AS 'Month', CONCAT('<a href=\"/cgi-bin/koha/members/accountline-details.pl?accountlines_id=',c.accountlines_id,'\">', c.accountlines_id, '</a>') AS 'Credit ID', d.debit_type_code AS 'Fund', CONCAT('<p style="color:#9e0000 !important; font-weight:700 !important; text-align:right; height: 5px !important; margin-top: 0px !important;">',FORMAT(-ABS(sum(c.amount)),2),'</p>') AS 'Amount'
 FROM account_offsets o
     LEFT JOIN accountlines d ON (o.debit_id = d.accountlines_id and d.debit_type_code is not null)
-	LEFT JOIN accountlines c ON (o.credit_id = c.accountlines_id and c.credit_type_code is not null)
+    LEFT JOIN accountlines c ON (o.credit_id = c.accountlines_id and c.credit_type_code is not null)
     LEFT JOIN cash_registers ON (c.register_id = cash_registers.name)
 WHERE DATE(c.date) BETWEEN <<Refunded BETWEEN (yyyy-mm-dd)|date>> AND <<and (yyyyy-mm-dd)|date>>
-AND c.credit_type_code != 'WRITEOFF' AND c.credit_type_code != 'CANCELLATION'
-AND c.credit_type_code != 'PURCHASE'
-AND c.credit_type_code != 'PAYMENT'
-AND c.credit_type_code != 'CREDIT'
-AND d.payment_type = 'CREDIT/DEBIT CARD'
-AND o.type = 'APPLY'
-AND o.amount != '0.00'
+    AND c.credit_type_code != 'WRITEOFF' AND c.credit_type_code != 'CANCELLATION'
+    AND c.credit_type_code != 'PURCHASE'
+    AND c.credit_type_code != 'PAYMENT'
+    AND c.credit_type_code != 'CREDIT'
+    AND d.payment_type = 'CREDIT/DEBIT CARD'
+    AND o.type = 'APPLY'
+    AND o.amount != '0.00'
