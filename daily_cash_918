@@ -1,0 +1,339 @@
+SELECT to_char(c.timestamp, 'yyyy-mm-dd') AS 'Date', cash_registers.name AS 'Register', d.debit_type_code AS 'Fund', 
+CONCAT('<p style="text-align:right!important; margin-top:0px!important;">',FORMAT(abs(sum(o.amount)),2),'</p>') AS 'Amount',
+c.payment_type AS 'Payment Type'    
+FROM account_offsets o
+    LEFT JOIN accountlines d ON (o.debit_id = d.accountlines_id and d.debit_type_code is not null)
+	LEFT JOIN accountlines c ON (o.credit_id = c.accountlines_id and c.credit_type_code is not null)
+    LEFT JOIN cash_registers ON (c.register_id = cash_registers.id)
+WHERE DATE(c.date) BETWEEN <<Collected BETWEEN (yyyy-mm-dd)|date>> AND <<and (yyyyy-mm-dd)|date>>
+AND d.debit_type_code != ''
+AND c.payment_type = 'CASH'
+GROUP BY d.debit_type_code ASC
+UNION ALL
+
+SELECT '', '', '', 
+
+
+CONCAT('<p style="text-align:right!important; font-weight: bold; margin-top:0px!important;">',FORMAT(ABS(sum(o.amount)),2),'</p>') AS 'Amount',
+'<h5 style="color: black !important; text-align: left; padding: 6px; margin-top: 0px !important; margin-bottom: 0px !important; line-height: .65 !important;
+padding-left: 0px; font-size: 15px !important; font-weight: bold;">Total Cash Sales</h5>' AS 'Payment Type'
+FROM account_offsets o
+    LEFT JOIN accountlines d ON (o.debit_id = d.accountlines_id and d.debit_type_code is not null)
+	LEFT JOIN accountlines c ON (o.credit_id = c.accountlines_id and c.credit_type_code is not null)
+    LEFT JOIN cash_registers ON (c.register_id = cash_registers.id)
+WHERE DATE(c.date) BETWEEN <<Collected BETWEEN (yyyy-mm-dd)|date>> AND <<and (yyyyy-mm-dd)|date>>
+AND d.debit_type_code != ''
+AND c.payment_type = 'CASH'
+UNION ALL
+
+SELECT '', '', '', CONCAT('<p style="color:#9e0000 !important; font-weight:700 !important; text-align:right; height: 5px !important; margin-top: 0px !important;">',FORMAT(-ABS(sum(c.amount)),2),'</p>') AS 'Amount', CONCAT('<b>','Total Cash Refunds','</b>') AS 'Payment Type'
+FROM account_offsets o
+    LEFT JOIN accountlines d ON (o.debit_id = d.accountlines_id and d.debit_type_code is not null)
+	LEFT JOIN accountlines c ON (o.credit_id = c.accountlines_id and c.credit_type_code is not null)
+    LEFT JOIN cash_registers ON (c.register_id = cash_registers.name)
+WHERE DATE(c.date) BETWEEN <<Refunded BETWEEN (yyyy-mm-dd)|date>> AND <<and (yyyyy-mm-dd)|date>>
+AND c.credit_type_code != 'WRITEOFF' AND c.credit_type_code != 'CANCELLATION'
+AND c.credit_type_code != 'PURCHASE'
+AND c.credit_type_code != 'PAYMENT'
+AND c.credit_type_code != 'CREDIT'
+AND d.payment_type = 'CASH'
+AND o.type = 'APPLY'
+AND o.amount != '0.00'
+
+UNION ALL
+
+
+
+SELECT '', '', '', CONCAT('<p style="text-align:right!important; font-weight: bold; margin-top:0px!important;">',(
+(SELECT FORMAT(ABS(sum(o.amount)),2) as sales
+FROM account_offsets o
+    LEFT JOIN accountlines d ON (o.debit_id = d.accountlines_id and d.debit_type_code is not null)
+	LEFT JOIN accountlines c ON (o.credit_id = c.accountlines_id and c.credit_type_code is not null)
+    LEFT JOIN cash_registers ON (c.register_id = cash_registers.id)
+WHERE DATE(c.date) BETWEEN <<Collected BETWEEN (yyyy-mm-dd)|date>> AND <<and (yyyyy-mm-dd)|date>>
+AND d.debit_type_code != ''
+AND c.payment_type = 'CASH')
++
+(SELECT FORMAT(-ABS(sum(c.amount)),2) as refunds
+FROM account_offsets o
+    LEFT JOIN accountlines d ON (o.debit_id = d.accountlines_id and d.debit_type_code is not null)
+	LEFT JOIN accountlines c ON (o.credit_id = c.accountlines_id and c.credit_type_code is not null)
+    LEFT JOIN cash_registers ON (c.register_id = cash_registers.name)
+WHERE DATE(c.date) BETWEEN <<Refunded BETWEEN (yyyy-mm-dd)|date>> AND <<and (yyyyy-mm-dd)|date>>
+AND c.credit_type_code != 'WRITEOFF' AND c.credit_type_code != 'CANCELLATION'
+AND c.credit_type_code != 'PURCHASE'
+AND c.credit_type_code != 'PAYMENT'
+AND c.credit_type_code != 'CREDIT'
+AND d.payment_type = 'CASH'
+AND o.type = 'APPLY'
+AND o.amount != '0.00')) ,'</b>') AS 'Amount', CONCAT('<b>','Net Cash (cash in drawer)','</b>') AS 'Payment Type'
+
+UNION
+SELECT '<h5 style="height: 40px !important; margin-bottom: 5px; padding: 6px; margin-top: 0px !important; margin-bottom: 0px !important; line-height: .65 !important;"></h5>', '', '', '', ''
+UNION
+
+SELECT to_char(c.timestamp, 'yyyy-mm-dd') AS 'Date', cash_registers.name AS 'Register', d.debit_type_code AS 'Fund', 
+CONCAT('<p style="text-align:right!important; margin-top:0px!important;">',FORMAT(ABS(sum(o.amount)),2),'</p>') AS 'Amount',
+c.payment_type AS 'Payment Type'    
+FROM account_offsets o
+    LEFT JOIN accountlines d ON (o.debit_id = d.accountlines_id and d.debit_type_code is not null)
+	LEFT JOIN accountlines c ON (o.credit_id = c.accountlines_id and c.credit_type_code is not null)
+    LEFT JOIN cash_registers ON (c.register_id = cash_registers.id)
+WHERE DATE(c.date) BETWEEN <<Collected BETWEEN (yyyy-mm-dd)|date>> AND <<and (yyyyy-mm-dd)|date>>
+AND d.debit_type_code != ''
+AND c.payment_type = 'CHECK'
+GROUP BY d.debit_type_code ASC
+
+UNION ALL
+
+SELECT '', '', '', 
+CONCAT('<p style="text-align:right!important; font-weight: bold; margin-top:0px!important;">',FORMAT(ABS(sum(o.amount)),2),'</p>') AS 'Amount',
+'<h5 style="color: black !important; text-align: left; padding: 6px; margin-top: 0px !important; margin-bottom: 0px !important; line-height: .65 !important;
+padding-left: 0px; font-size: 15px !important; font-weight: bold;">Total Check Sales</h5>' AS 'Payment Type'
+FROM account_offsets o
+    LEFT JOIN accountlines d ON (o.debit_id = d.accountlines_id and d.debit_type_code is not null)
+	LEFT JOIN accountlines c ON (o.credit_id = c.accountlines_id and c.credit_type_code is not null)
+    LEFT JOIN cash_registers ON (c.register_id = cash_registers.id)
+WHERE DATE(c.date) BETWEEN <<Collected BETWEEN (yyyy-mm-dd)|date>> AND <<and (yyyyy-mm-dd)|date>>
+AND d.debit_type_code != ''
+AND c.payment_type = 'CHECK'
+
+UNION ALL
+
+SELECT '', '', '', CONCAT('<p style="color:#9e0000 !important; font-weight:700 !important; text-align:right; height: 5px !important; margin-top: 0px !important;">',FORMAT(-ABS(sum(c.amount)),2),'</p>') AS 'Amount', CONCAT('<b>','Total Check Refunds','</b>') AS 'Payment Type'
+FROM account_offsets o
+    LEFT JOIN accountlines d ON (o.debit_id = d.accountlines_id and d.debit_type_code is not null)
+	LEFT JOIN accountlines c ON (o.credit_id = c.accountlines_id and c.credit_type_code is not null)
+    LEFT JOIN cash_registers ON (c.register_id = cash_registers.name)
+WHERE DATE(c.date) BETWEEN <<Refunded BETWEEN (yyyy-mm-dd)|date>> AND <<and (yyyyy-mm-dd)|date>>
+AND c.credit_type_code != 'WRITEOFF' AND c.credit_type_code != 'CANCELLATION'
+AND c.credit_type_code != 'PURCHASE'
+AND c.credit_type_code != 'PAYMENT'
+AND c.credit_type_code != 'CREDIT'
+AND d.payment_type = 'CHECK'
+AND o.type = 'APPLY'
+AND o.amount != '0.00'
+
+UNION ALL
+
+SELECT '', '', '', CONCAT('<b>',(
+(SELECT FORMAT(ABS(sum(o.amount)),2) as sales
+FROM account_offsets o
+    LEFT JOIN accountlines d ON (o.debit_id = d.accountlines_id and d.debit_type_code is not null)
+	LEFT JOIN accountlines c ON (o.credit_id = c.accountlines_id and c.credit_type_code is not null)
+    LEFT JOIN cash_registers ON (c.register_id = cash_registers.id)
+WHERE DATE(c.date) BETWEEN <<Collected BETWEEN (yyyy-mm-dd)|date>> AND <<and (yyyyy-mm-dd)|date>>
+AND d.debit_type_code != ''
+AND c.payment_type = 'CHECK')
++
+(SELECT FORMAT(-ABS(sum(c.amount)),2) as refunds
+FROM account_offsets o
+    LEFT JOIN accountlines d ON (o.debit_id = d.accountlines_id and d.debit_type_code is not null)
+	LEFT JOIN accountlines c ON (o.credit_id = c.accountlines_id and c.credit_type_code is not null)
+    LEFT JOIN cash_registers ON (c.register_id = cash_registers.name)
+WHERE DATE(c.date) BETWEEN <<Refunded BETWEEN (yyyy-mm-dd)|date>> AND <<and (yyyyy-mm-dd)|date>>
+AND c.credit_type_code != 'WRITEOFF' AND c.credit_type_code != 'CANCELLATION'
+AND c.credit_type_code != 'PURCHASE'
+AND c.credit_type_code != 'PAYMENT'
+AND c.credit_type_code != 'CREDIT'
+AND d.payment_type = 'CHECK'
+AND o.type = 'APPLY'
+AND o.amount != '0.00')) ,'</b>') AS 'Amount', CONCAT('<b>','Net Checks','</b>') AS 'Payment Type'
+
+UNION ALL
+SELECT '<h5 style="height: 25px !important; margin-bottom: 5px; padding: 6px; margin-top: 0px !important; margin-bottom: 0px !important; line-height: .65 !important;"></h5>', '', '', '', ''
+
+UNION ALL
+
+SELECT to_char(c.timestamp, 'yyyy-mm-dd') AS 'Date', cash_registers.name AS 'Register', d.debit_type_code AS 'Fund', 
+CONCAT('<p style="text-align:right!important; margin-top:0px!important;">',FORMAT(abs(sum(o.amount)),2),'</p>') AS 'Amount',
+c.payment_type AS 'Payment Type'    
+FROM account_offsets o
+    LEFT JOIN accountlines d ON (o.debit_id = d.accountlines_id and d.debit_type_code is not null)
+	LEFT JOIN accountlines c ON (o.credit_id = c.accountlines_id and c.credit_type_code is not null)
+    LEFT JOIN cash_registers ON (c.register_id = cash_registers.id)
+WHERE DATE(c.date) BETWEEN <<Collected BETWEEN (yyyy-mm-dd)|date>> AND <<and (yyyyy-mm-dd)|date>>
+AND d.debit_type_code != ''
+AND c.payment_type = 'CREDIT/DEBIT CARD'
+GROUP BY d.debit_type_code ASC
+
+UNION ALL
+
+SELECT '', '', '', 
+CONCAT('<p style="text-align:right!important; font-weight: bold; margin-top:0px!important;">',FORMAT(ABS(sum(o.amount)),2),'</p>') AS 'Amount',
+'<h5 style="color: black !important; text-align: left; padding: 6px; margin-top: 0px !important; margin-bottom: 0px !important; line-height: .65 !important;
+padding-left: 0px; font-size: 15px !important; font-weight: bold;">Total Credit/Debit Sales</h5>' AS 'Payment Type'
+FROM account_offsets o
+    LEFT JOIN accountlines d ON (o.debit_id = d.accountlines_id and d.debit_type_code is not null)
+        LEFT JOIN accountlines c ON (o.credit_id = c.accountlines_id and c.credit_type_code is not null)
+    LEFT JOIN cash_registers ON (c.register_id = cash_registers.id)
+WHERE DATE(c.date) BETWEEN <<Collected BETWEEN (yyyy-mm-dd)|date>> AND <<and (yyyyy-mm-dd)|date>>
+AND d.debit_type_code != ''
+AND c.payment_type = 'CREDIT/DEBIT CARD'
+
+UNION ALL
+
+SELECT '', '', '', CONCAT('<p style="color:#9e0000 !important; font-weight:700 !important; text-align:right; height: 5px !important; margin-top: 0px !important;">',FORMAT(-ABS(sum(c.amount)),2),'</p>') AS 'Amount', CONCAT('<b>','Total Credit/Debit Refunds','</b>') AS 'Payment Type'
+FROM account_offsets o
+    LEFT JOIN accountlines d ON (o.debit_id = d.accountlines_id and d.debit_type_code is not null)
+	LEFT JOIN accountlines c ON (o.credit_id = c.accountlines_id and c.credit_type_code is not null)
+    LEFT JOIN cash_registers ON (c.register_id = cash_registers.name)
+WHERE DATE(c.date) BETWEEN <<Refunded BETWEEN (yyyy-mm-dd)|date>> AND <<and (yyyyy-mm-dd)|date>>
+AND c.credit_type_code != 'WRITEOFF' AND c.credit_type_code != 'CANCELLATION'
+AND c.credit_type_code != 'PURCHASE'
+AND c.credit_type_code != 'PAYMENT'
+AND c.credit_type_code != 'CREDIT'
+AND d.payment_type = 'CREDIT/DEBIT CARD'
+AND o.type = 'APPLY'
+AND o.amount != '0.00'
+
+UNION ALL
+
+SELECT '', '', '', CONCAT('<b>',(
+(SELECT FORMAT(ABS(sum(o.amount)),2) as sales
+FROM account_offsets o
+    LEFT JOIN accountlines d ON (o.debit_id = d.accountlines_id and d.debit_type_code is not null)
+	LEFT JOIN accountlines c ON (o.credit_id = c.accountlines_id and c.credit_type_code is not null)
+    LEFT JOIN cash_registers ON (c.register_id = cash_registers.id)
+WHERE DATE(c.date) BETWEEN <<Collected BETWEEN (yyyy-mm-dd)|date>> AND <<and (yyyyy-mm-dd)|date>>
+AND d.debit_type_code != ''
+AND c.payment_type = 'CREDIT/DEBIT CARD')
++
+(SELECT FORMAT(-ABS(sum(c.amount)),2) as refunds
+FROM account_offsets o
+    LEFT JOIN accountlines d ON (o.debit_id = d.accountlines_id and d.debit_type_code is not null)
+	LEFT JOIN accountlines c ON (o.credit_id = c.accountlines_id and c.credit_type_code is not null)
+    LEFT JOIN cash_registers ON (c.register_id = cash_registers.name)
+WHERE DATE(c.date) BETWEEN <<Refunded BETWEEN (yyyy-mm-dd)|date>> AND <<and (yyyyy-mm-dd)|date>>
+AND c.credit_type_code != 'WRITEOFF' AND c.credit_type_code != 'CANCELLATION'
+AND c.credit_type_code != 'PURCHASE'
+AND c.credit_type_code != 'PAYMENT'
+AND c.credit_type_code != 'CREDIT'
+AND d.payment_type = 'CREDIT/DEBIT CARD'
+AND o.type = 'APPLY'
+AND o.amount != '0.00')) ,'</b>') AS 'Amount', CONCAT('<b>','Net Credit/Debit','</b>') AS 'Payment Type'
+
+UNION ALL
+SELECT '<h5 style="height: 25px !important; margin-bottom: 5px; padding: 6px; margin-top: 0px !important; margin-bottom: 0px !important; line-height: .65 !important;"></h5>', '', '', '', ''
+
+UNION ALL
+SELECT '<h5 style="height: 26px !important; margin-bottom: 5px; padding: 6px; margin-top: 0px !important; margin-bottom: 0px !important; line-height: .65 !important;"></h5>', '', '', '', ''
+UNION
+
+SELECT '<h5 style="height: 26px !important; margin-bottom: 5px; padding: 6px; margin-top: 0px !important; margin-bottom: 0px !important; line-height: .65 !important;"></h5>', '', '', '', ''
+
+
+UNION ALL
+
+SELECT '', '', '', 
+CONCAT('<p style="text-align:right!important; font-weight: bold; margin-top:0px!important;">',FORMAT(ABS(sum(o.amount)),2),'</p>') AS 'Amount',
+'<h5 style="color: black !important; text-align: left; padding: 6px; margin-top: 0px !important; margin-bottom: 0px !important; line-height: .65 !important;
+padding-left: 0px; font-size: 100% !important; font-weight: bold;">Total Sales</h5>' AS 'Payment Type'
+FROM account_offsets o
+	LEFT JOIN accountlines d ON (o.debit_id = d.accountlines_id and d.debit_type_code is not null)
+    LEFT JOIN accountlines c ON (o.credit_id = c.accountlines_id and c.credit_type_code is not null)
+	LEFT JOIN cash_registers ON (c.register_id = cash_registers.id)
+WHERE DATE(c.date) BETWEEN <<Collected BETWEEN (yyyy-mm-dd)|date>> AND <<and (yyyyy-mm-dd)|date>>
+AND cash_registers.id = 2
+AND d.debit_type_code != ''
+
+UNION
+
+SELECT '', '', '', 
+CONCAT('<p style="color:#9e0000 !important; font-weight:700 !important; text-align:right; height: 5px !important; margin-top: 0px !important;">',FORMAT(-ABS(sum(c.amount)),2),'</p>') AS 'Amount', CONCAT('<b>','Total Refunds','</b>') AS 'Payment Type'
+FROM account_offsets o
+    LEFT JOIN accountlines d ON (o.debit_id = d.accountlines_id and d.debit_type_code is not null)
+	LEFT JOIN accountlines c ON (o.credit_id = c.accountlines_id and c.credit_type_code is not null)
+    LEFT JOIN cash_registers ON (c.register_id = cash_registers.name)
+WHERE DATE(c.date) BETWEEN <<Refunded BETWEEN (yyyy-mm-dd)|date>> AND <<and (yyyyy-mm-dd)|date>>
+AND c.credit_type_code != 'WRITEOFF' AND c.credit_type_code != 'CANCELLATION'
+AND c.credit_type_code != 'PURCHASE'
+AND c.credit_type_code != 'PAYMENT'
+AND c.credit_type_code != 'CREDIT'
+AND d.payment_type != 'FINANCE REFUND'
+AND o.type = 'APPLY'
+AND o.amount != '0.00'
+
+UNION ALL
+SELECT '<h5 style="height: 40px !important; margin-bottom: 5px; padding: 6px; margin-top: 0px !important; margin-bottom: 0px !important; line-height: .65 !important;"></h5>', '', '', '', ''
+
+UNION ALL
+SELECT '<h5 style="color: #000 !important; font-weight: 700; text-align: center; margin: 0.2em 0.9em;">Date</h5>',
+'<h5 style="color: #000 !important; font-weight: 700; text-align: center; margin: 0.2em 0.9em;">Credit ID</h5>',
+'<h5 style="color: #000 !important; font-weight: 700; text-align: center; margin: 0.2em 0.9em;">Credit Type Code</h5>',
+'<h5 style="color: #000 !important; font-weight: 700; text-align: center; margin: 0.2em 0.9em;">Amount</h5>',
+'<h5 style="color: #000 !important; font-weight: 700; text-align: center; margin: 0.2em 0.9em;">Refund Type</h5>'
+
+UNION ALL
+
+SELECT to_char(c.timestamp, 'yyyy-mm-dd') AS 'Date', CONCAT('<a href=\"/cgi-bin/koha/members/accountline-details.pl?accountlines_id=',c.accountlines_id,'\">', c.accountlines_id, '</a>') AS 'Credit ID', c.credit_type_code AS 'Credit Type Code', 
+CONCAT('<p style="text-align:right; margin-top:0px!important;">',FORMAT(-ABS(sum(c.amount)),2),'</p>') AS 'Amount',
+d.payment_type AS 'Payment Type'
+FROM account_offsets o
+	LEFT JOIN accountlines d ON (o.debit_id = d.accountlines_id and d.debit_type_code is not null)
+	LEFT JOIN accountlines c ON (o.credit_id = c.accountlines_id and c.credit_type_code is not null)
+	LEFT JOIN cash_registers ON (c.register_id = cash_registers.name)
+    WHERE DATE(c.date) BETWEEN <<Refunded BETWEEN (yyyy-mm-dd)|date>> AND <<and (yyyyy-mm-dd)|date>>
+	AND c.credit_type_code != 'WRITEOFF' AND c.credit_type_code != 'CANCELLATION'
+    AND c.credit_type_code != 'PURCHASE'
+    AND c.credit_type_code != 'PAYMENT'
+    AND c.credit_type_code != 'CREDIT'
+	AND d.payment_type = 'CASH'
+    AND o.type = 'APPLY'
+    AND o.amount != '0.00'
+   
+UNION ALL
+
+SELECT to_char(c.timestamp, 'yyyy-mm-dd') AS 'Date', CONCAT('<a href=\"/cgi-bin/koha/members/accountline-details.pl?accountlines_id=',c.accountlines_id,'\">', c.accountlines_id, '</a>') AS 'Credit ID', c.credit_type_code AS 'Credit Type Code', 
+CONCAT('<p style="text-align:right; margin-top:0px!important;">',FORMAT(-ABS(sum(c.amount)),2),'</p>') AS 'Amount',
+d.payment_type AS 'Payment Type'
+FROM account_offsets o
+	LEFT JOIN accountlines d ON (o.debit_id = d.accountlines_id and d.debit_type_code is not null)
+    LEFT JOIN accountlines c ON (o.credit_id = c.accountlines_id and c.credit_type_code is not null)
+	LEFT JOIN cash_registers ON (c.register_id = cash_registers.name)
+    WHERE DATE(c.date) BETWEEN <<Refunded BETWEEN (yyyy-mm-dd)|date>> AND <<and (yyyyy-mm-dd)|date>>
+	AND c.credit_type_code != 'WRITEOFF' AND c.credit_type_code != 'CANCELLATION'
+    AND c.credit_type_code != 'PURCHASE'
+    AND c.credit_type_code != 'PAYMENT'
+    AND c.credit_type_code != 'CREDIT'
+	AND d.payment_type = 'CHECK'
+    AND o.type = 'APPLY'
+    AND o.amount != '0.00'
+   
+UNION ALL
+
+SELECT to_char(c.timestamp, 'yyyy-mm-dd') AS 'Date', CONCAT('<a href=\"/cgi-bin/koha/members/accountline-details.pl?accountlines_id=',c.accountlines_id,'\">', c.accountlines_id, '</a>') AS 'Credit ID', c.credit_type_code AS 'Credit Type Code', 
+CONCAT('<p style="text-align:right; margin-top:0px!important;">',FORMAT(-ABS(sum(c.amount)),2),'</p>') AS 'Amount',
+d.payment_type AS 'Payment Type'
+FROM account_offsets o
+	LEFT JOIN accountlines d ON (o.debit_id = d.accountlines_id and d.debit_type_code is not null)
+    LEFT JOIN accountlines c ON (o.credit_id = c.accountlines_id and c.credit_type_code is not null)
+	LEFT JOIN cash_registers ON (c.register_id = cash_registers.name)
+    WHERE DATE(c.date) BETWEEN <<Refunded BETWEEN (yyyy-mm-dd)|date>> AND <<and (yyyyy-mm-dd)|date>>
+	AND c.credit_type_code != 'WRITEOFF' AND c.credit_type_code != 'CANCELLATION'
+    AND c.credit_type_code != 'PURCHASE'
+    AND c.credit_type_code != 'PAYMENT'
+    AND c.credit_type_code != 'CREDIT'
+	AND d.payment_type = 'CREDIT/DEBIT CARD'
+    AND o.type = 'APPLY'
+    AND o.amount != '0.00'    
+   
+UNION ALL
+SELECT '<h5 style="height: 40px !important; margin-bottom: 5px; padding: 6px; margin-top: 0px !important; margin-bottom: 0px !important; line-height: .65 !important;"></h5>', '', '', '', ''
+UNION ALL
+
+SELECT to_char(c.timestamp, 'yyyy-mm-dd') AS 'Date', CONCAT('<a href=\"/cgi-bin/koha/members/accountline-details.pl?accountlines_id=',c.accountlines_id,'\">', c.accountlines_id, '</a>') AS 'Credit ID', c.credit_type_code AS 'Credit Type Code', 
+CONCAT('<p style="text-align:right; margin-top:0px!important;">',FORMAT(-ABS(sum(c.amount)),2),'</p>') AS 'Amount',
+d.payment_type AS 'Payment Type'
+FROM account_offsets o
+	LEFT JOIN accountlines d ON (o.debit_id = d.accountlines_id and d.debit_type_code is not null)
+    LEFT JOIN accountlines c ON (o.credit_id = c.accountlines_id and c.credit_type_code is not null)
+	LEFT JOIN cash_registers ON (c.register_id = cash_registers.name)
+    WHERE DATE(c.date) BETWEEN <<Refunded BETWEEN (yyyy-mm-dd)|date>> AND <<and (yyyyy-mm-dd)|date>>
+	AND c.credit_type_code != 'WRITEOFF' AND c.credit_type_code != 'CANCELLATION'
+    AND c.credit_type_code != 'PURCHASE'
+    AND c.credit_type_code != 'PAYMENT'
+    AND c.credit_type_code != 'CREDIT'
+	AND d.payment_type = 'FINANCE REFUND'
+    AND o.type = 'APPLY'
+    AND o.amount != '0.00'  
